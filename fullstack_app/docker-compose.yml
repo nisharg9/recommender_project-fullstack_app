@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  nexustask-app:
+    build: .
+    container_name: nexustask_web
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=production-secret-key-987654321
+      - DATABASE_URL=sqlite:///./nexustask.db
+    volumes:
+      - ./backend/nexustask.db:/app/backend/nexustask.db
+    restart: always

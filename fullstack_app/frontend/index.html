@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusTask | Full-Stack Management & Analytics Dashboard</title>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+      <span class="brand-name">Nexus<span class="accent">Task</span></span>
+      <span class="badge-tag">v1.0 Pro</span>
+    </div>
+    
+    <div class="nav-actions">
+      <button id="themeToggle" class="icon-btn" title="Toggle Dark/Light Mode">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      
+      <div id="userProfile" class="user-profile hidden">
+        <div class="avatar" id="userAvatar">D</div>
+        <div class="user-info">
+          <span id="userName" class="user-name">Demo User</span>
+          <span id="userEmail" class="user-email">demo@example.com</span>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </button>
+      </div>
+
+      <button id="loginModalBtn" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-lock"></i> Sign In / Register
+      </button>
+    </div>
+  </nav>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-menu">
+        <button class="menu-item active" data-tab="dashboard">
+          <i class="fa-solid fa-chart-pie"></i> Analytics Dashboard
+        </button>
+        <button class="menu-item" data-tab="tasks">
+          <i class="fa-solid fa-list-check"></i> Task Manager
+        </button>
+        <button class="menu-item" data-tab="docs">
+          <i class="fa-solid fa-code"></i> API Documentation
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <div class="status-indicator online"></div>
+          <span>API: <strong id="apiStatusText">Connecting...</strong></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <main class="main-content">
+      
+      <!-- TAB 1: Analytics Dashboard -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <div class="page-header">
+          <div>
+            <h1>Overview & Analytics</h1>
+            <p class="subtitle">Real-time task performance and project execution metrics</p>
+          </div>
+          <button id="quickCreateBtn" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> New Task
+          </button>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card glass">
+            <div class="card-icon blue"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="card-data">
+              <span class="label">Total Tasks</span>
+              <h3 id="statTotal">0</h3>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="card-icon green"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="card-data">
+              <span class="label">Completed</span>
+              <h3 id="statCompleted">0</h3>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="card-icon orange"><i class="fa-solid fa-spinner"></i></div>
+            <div class="card-data">
+              <span class="label">In Progress</span>
+              <h3 id="statInProgress">0</h3>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="card-icon purple"><i class="fa-solid fa-fire"></i></div>
+            <div class="card-data">
+              <span class="label">Completion Rate</span>
+              <h3 id="statRate">0%</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Tasks List & Activity Card -->
+        <div class="dashboard-widgets">
+          <div class="widget-card glass">
+            <div class="widget-header">
+              <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h3>
+              <button class="btn btn-text view-all-tasks">View All Tasks</button>
+            </div>
+            <div id="recentTaskList" class="task-mini-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="widget-card glass">
+            <div class="widget-header">
+              <h3><i class="fa-solid fa-bolt"></i> Tech Stack Overview</h3>
+            </div>
+            <div class="stack-info">
+              <div class="stack-item">
+                <i class="fa-brands fa-python python-color"></i>
+                <div>
+                  <strong>FastAPI Backend</strong>
+                  <p>Asynchronous REST API with JWT Auth</p>
+                </div>
+              </div>
+              <div class="stack-item">
+                <i class="fa-solid fa-database db-color"></i>
+                <div>
+                  <strong>SQLAlchemy & SQLite</strong>
+                  <p>Persistent relational storage</p>
+                </div>
+              </div>
+              <div class="stack-item">
+                <i class="fa-brands fa-js js-color"></i>
+                <div>
+                  <strong>Modern Vanilla JS & CSS</strong>
+                  <p>Glassmorphic UI & dynamic rendering</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Task Manager -->
+      <section id="tab-tasks" class="tab-pane">
+        <div class="page-header">
+          <div>
+            <h1>Task Management</h1>
+            <p class="subtitle">Create, search, filter, and modify project tasks</p>
+          </div>
+          <button id="openTaskModalBtn" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Create New Task
+          </button>
+        </div>
+
+        <!-- Task Filters Bar -->
+        <div class="filter-bar glass">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search tasks by title or category..." />
+          </div>
+          <div class="filter-group">
+            <select id="filterStatus">
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <select id="filterPriority">
+              <option value="">All Priorities</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Task Items Container -->
+        <div id="taskGrid" class="task-grid">
+          <!-- Dynamically populated tasks -->
+        </div>
+      </section>
+
+      <!-- TAB 3: API Documentation -->
+      <section id="tab-docs" class="tab-pane">
+        <div class="page-header">
+          <div>
+            <h1>API Documentation & Endpoints</h1>
+            <p class="subtitle">Interactive Swagger docs and OpenAPI specifications</p>
+          </div>
+          <a href="/docs" target="_blank" class="btn btn-outline">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Swagger UI
+          </a>
+        </div>
+
+        <div class="docs-card glass">
+          <h3>Available Endpoints Summary</h3>
+          <div class="endpoint-list">
+            <div class="endpoint-item post">
+              <span class="method">POST</span>
+              <span class="path">/api/v1/auth/register</span>
+              <span class="desc">Register a new user account</span>
+            </div>
+            <div class="endpoint-item post">
+              <span class="method">POST</span>
+              <span class="path">/api/v1/auth/login</span>
+              <span class="desc">Authenticate user and obtain JWT token</span>
+            </div>
+            <div class="endpoint-item get">
+              <span class="method">GET</span>
+              <span class="path">/api/v1/tasks</span>
+              <span class="desc">Retrieve user's task list (supports search & filters)</span>
+            </div>
+            <div class="endpoint-item post">
+              <span class="method">POST</span>
+              <span class="path">/api/v1/tasks</span>
+              <span class="desc">Create a new task entity</span>
+            </div>
+            <div class="endpoint-item put">
+              <span class="method">PUT</span>
+              <span class="path">/api/v1/tasks/{id}</span>
+              <span class="desc">Update task status, priority, or title</span>
+            </div>
+            <div class="endpoint-item delete">
+              <span class="method">DELETE</span>
+              <span class="path">/api/v1/tasks/{id}</span>
+              <span class="desc">Remove task from database</span>
+            </div>
+            <div class="endpoint-item get">
+              <span class="method">GET</span>
+              <span class="path">/api/v1/analytics/summary</span>
+              <span class="desc">Fetch user task statistics</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- AUTHENTICATION MODAL -->
+  <div id="authModal" class="modal-backdrop hidden">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <h2 id="authModalTitle">Sign In</h2>
+        <button id="closeAuthModal" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="authForm">
+          <div id="fullNameGroup" class="form-group hidden">
+            <label for="regFullName">Full Name</label>
+            <input type="text" id="regFullName" placeholder="e.g. John Doe" />
+          </div>
+          <div id="emailGroup" class="form-group hidden">
+            <label for="regEmail">Email Address</label>
+            <input type="email" id="regEmail" placeholder="e.g. john@example.com" />
+          </div>
+          <div class="form-group">
+            <label for="authUsername">Username</label>
+            <input type="text" id="authUsername" required placeholder="Enter username (e.g. demo)" />
+          </div>
+          <div class="form-group">
+            <label for="authPassword">Password</label>
+            <input type="password" id="authPassword" required placeholder="Enter password (e.g. password123)" />
+          </div>
+          <button type="submit" id="authSubmitBtn" class="btn btn-primary btn-block">Sign In</button>
+        </form>
+        <div class="auth-toggle-link">
+          <span id="authToggleText">Don't have an account?</span>
+          <button id="toggleAuthModeBtn" class="btn btn-text">Register New Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASK MODAL (Create / Edit) -->
+  <div id="taskModal" class="modal-backdrop hidden">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <h2 id="taskModalTitle">Create New Task</h2>
+        <button id="closeTaskModal" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="taskForm">
+          <input type="hidden" id="taskIdInput" />
+          <div class="form-group">
+            <label for="taskTitle">Task Title *</label>
+            <input type="text" id="taskTitle" required placeholder="Enter title" />
+          </div>
+          <div class="form-group">
+            <label for="taskDescription">Description</label>
+            <textarea id="taskDescription" rows="3" placeholder="Task details..."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="taskCategory">Category</label>
+              <input type="text" id="taskCategory" placeholder="e.g. Frontend, Backend, UI" value="General" />
+            </div>
+            <div class="form-group">
+              <label for="taskPriority">Priority</label>
+              <select id="taskPriority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="taskStatus">Status</label>
+            <select id="taskStatus">
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Save Task</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
